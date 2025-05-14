@@ -1,1 +1,1 @@
-cogit 
+# RestaurantPOS - Java 2024/2025 Project
