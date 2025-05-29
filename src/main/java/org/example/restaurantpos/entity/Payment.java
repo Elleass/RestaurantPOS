@@ -1,10 +1,8 @@
 package org.example.restaurantpos.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -15,21 +13,23 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Payment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_payment") // ✅ Match DB column
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_order")
+    @JoinColumn(name = "id_order", nullable = false)
     private Order order;
 
     @Column(name = "payment_time")
     private LocalDateTime paymentTime;
 
-    @Column(name = "payment_method")
+    @Column(name = "payment_method", nullable = false)
     private String paymentMethod;
 
-    @Column(name = "amount_paid")
+    @Column(name = "amount_paid", nullable = false)
     private BigDecimal amountPaid;
 
     @Column(name = "is_paid")

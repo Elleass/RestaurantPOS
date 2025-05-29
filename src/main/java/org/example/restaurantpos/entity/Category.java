@@ -1,10 +1,7 @@
 package org.example.restaurantpos.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.*;
 
 @Entity
 @Table(name = "categories")
@@ -13,10 +10,12 @@ import lombok.Builder;
 @AllArgsConstructor
 @Builder
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_category")
     private Long id;
 
-    @Column(name = "category_name")
+    @Column(name = "category_name", unique = true, nullable = false)
     private String categoryName;
 }

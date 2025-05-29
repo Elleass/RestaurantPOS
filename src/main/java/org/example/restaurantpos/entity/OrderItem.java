@@ -1,10 +1,8 @@
 package org.example.restaurantpos.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.*;
+
 import java.math.BigDecimal;
 
 @Entity
@@ -14,20 +12,23 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class OrderItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_order_item") // Match DB column name
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_order")
+    @JoinColumn(name = "id_order", nullable = false)
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "id_item")
+    @JoinColumn(name = "id_item", nullable = false)
     private MenuItem item;
 
+    @Column(nullable = false)
     private Integer quantity;
 
-    @Column(name = "item_price")
+    @Column(name = "item_price", nullable = false)
     private BigDecimal itemPrice;
 }
