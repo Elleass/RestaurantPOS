@@ -1,9 +1,13 @@
 package org.example.restaurantpos.controller;
-import org.example.restaurantpos.service.UserService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.example.restaurantpos.entity.User;
 import java.util.List;
+
+import org.example.restaurantpos.entity.User;
+import org.example.restaurantpos.service.UserService;
+
+
 
 
 @RestController
