@@ -1,5 +1,6 @@
 package org.example.restaurantpos.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,6 +23,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @JsonProperty("isLocked")
     @Column(name = "is_locked")
     private boolean isLocked;
 
