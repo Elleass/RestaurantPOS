@@ -6,6 +6,7 @@ import org.example.restaurantpos.entity.Customer;
 import org.example.restaurantpos.service.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,27 +22,31 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping
-    @Operation(summary = "Get all customers")
+    @Operation(summary = "Get all customers (USER, ADMIN)")
     public ResponseEntity<List<Customer>> getAllCustomers() {
         return ResponseEntity.ok(customerService.getAllCustomers());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    @Operation(summary = "Create customer")
+    @Operation(summary = "Create customer (ADMIN only)")
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
         Customer savedCustomer = customerService.createCustomer(customer);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCustomer);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/{id}")
-    @Operation(summary = "Get customer by ID")
+    @Operation(summary = "Get customer by ID (USER, ADMIN)")
     public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
         return ResponseEntity.ok(customerService.getCustomerById(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    @Operation(summary = "Update customer", description = "Update an existing customer's information")
+    @Operation(summary = "Update customer (ADMIN only)")
     public ResponseEntity<Customer> updateCustomer(
             @PathVariable Long id,
             @RequestBody Customer updatedCustomer
@@ -49,8 +54,9 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.updateCustomer(id, updatedCustomer));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete customer")
+    @Operation(summary = "Delete customer (ADMIN only)")
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
         customerService.deleteCustomer(id);
         return ResponseEntity.noContent().build();

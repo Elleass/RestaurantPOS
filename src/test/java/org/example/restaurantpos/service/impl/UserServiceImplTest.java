@@ -7,6 +7,7 @@ import org.example.restaurantpos.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,9 @@ class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -30,12 +34,12 @@ class UserServiceImplTest {
 
         Role role = new Role();
         role.setId(1L);
-        role.setRoleName("ADMIN");
+        role.setRoleName("ROLE_ADMIN");
 
         user = new User();
         user.setId(1L);
         user.setUsername("testuser");
-        user.setPassword("password");
+        user.setPassword("plainpass");
         user.setRole(role);
         user.setLocked(false);
     }
@@ -48,16 +52,20 @@ class UserServiceImplTest {
 
         assertEquals(1, users.size());
         assertEquals("testuser", users.get(0).getUsername());
+        verify(userRepository).findAll();
     }
 
     @Test
-    void shouldCreateUser() {
-        when(userRepository.save(user)).thenReturn(user);
+    void shouldCreateUserWithEncodedPassword() {
+        when(passwordEncoder.encode("plainpass")).thenReturn("encodedpass");
+        when(userRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
         User created = userService.createUser(user);
 
         assertNotNull(created);
-        assertEquals("testuser", created.getUsername());
+        assertEquals("encodedpass", created.getPassword());
+        verify(passwordEncoder).encode("plainpass");
+        verify(userRepository).save(any());
     }
 
     @Test
@@ -68,6 +76,7 @@ class UserServiceImplTest {
 
         assertNotNull(result);
         assertEquals("testuser", result.getUsername());
+        verify(userRepository).findById(1L);
     }
 
     @Test
@@ -75,6 +84,7 @@ class UserServiceImplTest {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> userService.getUserById(1L));
+        verify(userRepository).findById(1L);
     }
 
     @Test
@@ -86,12 +96,17 @@ class UserServiceImplTest {
         updated.setLocked(true);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(passwordEncoder.encode("newpass")).thenReturn("hashedpass");
         when(userRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
         User result = userService.updateUser(1L, updated);
 
         assertEquals("updateduser", result.getUsername());
+        assertEquals("hashedpass", result.getPassword());
         assertTrue(result.isLocked());
+
+        verify(passwordEncoder).encode("newpass");
+        verify(userRepository).save(any());
     }
 
     @Test
@@ -108,5 +123,6 @@ class UserServiceImplTest {
         when(userRepository.existsById(1L)).thenReturn(false);
 
         assertThrows(EntityNotFoundException.class, () -> userService.deleteUser(1L));
+        verify(userRepository, never()).deleteById(any());
     }
 }
