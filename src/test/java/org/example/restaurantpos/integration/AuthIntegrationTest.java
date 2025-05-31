@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,28 +24,15 @@ import java.util.Map;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(properties = {"spring.profiles.active=integration-test"})
+@SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("integration-test")
 @Testcontainers
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AuthIntegrationTest {
+public class AuthIntegrationTest extends BaseIntegrationTest {
 
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
-            .withDatabaseName("testdb")
-            .withUsername("test")
-            .withPassword("test");
 
-    static {
-        postgres.start();
-    }
-
-    @DynamicPropertySource
-    static void registerPgProps(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
 
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
@@ -54,7 +42,7 @@ public class AuthIntegrationTest {
 
     @BeforeAll
     void setupUser() {
-        userRepository.deleteAll(); // 🔥 clear DB to ensure clean state
+        userRepository.deleteAll(); // clear DB to ensure clean state
 
         Role adminRole = roleRepository.findByRoleName("ROLE_ADMIN")
                 .orElseGet(() -> roleRepository.save(
