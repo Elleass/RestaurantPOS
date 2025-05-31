@@ -60,8 +60,8 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
+                .httpBasic(httpBasic -> {}) // <-- ENABLE HTTP BASIC!
                 .formLogin(login -> login.disable())
-                .httpBasic(httpBasic -> httpBasic.disable())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) ->
                                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")));
