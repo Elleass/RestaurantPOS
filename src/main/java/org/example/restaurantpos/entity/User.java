@@ -28,6 +28,6 @@ public class User {
     private boolean isLocked;
 
     @ManyToOne
-    @JoinColumn(name = "id_role", nullable = false)
+    @JoinColumn(name = "id_role", nullable = true)
     private Role role;
 }
