@@ -2,6 +2,7 @@ package org.example.restaurantpos.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.example.restaurantpos.entity.Order;
+import org.example.restaurantpos.entity.OrderItem;
 import org.example.restaurantpos.repository.OrderRepository;
 import org.example.restaurantpos.service.OrderService;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order createOrder(Order order) {
+        if (order.getOrderItems() != null) {
+            for (OrderItem item : order.getOrderItems()) {
+                item.setOrder(order);
+            }
+        }
         return orderRepository.save(order);
     }
 

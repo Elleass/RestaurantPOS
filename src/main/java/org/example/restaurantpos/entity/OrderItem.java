@@ -1,5 +1,6 @@
 package org.example.restaurantpos.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +19,7 @@ public class OrderItem {
     @Column(name = "id_order_item") // Match DB column name
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_order", nullable = false)
     private Order order;
