@@ -13,7 +13,7 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_role") // 🔧 Matches SQL column name
+    @Column(name = "id_role")
     private Long id;
 
     @Column(name = "role_name", nullable = false)
