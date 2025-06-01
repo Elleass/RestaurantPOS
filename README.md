@@ -77,7 +77,19 @@ schemat działania:
       |
 [ Dostęp do zasobów lub błąd 401/403 ]
 ```
-    ![Security_img](https://github.com/user-attachments/assets/5623fd11-a76b-4a6e-93f2-8618119c8760)
+![obraz](https://github.com/user-attachments/assets/b35794d1-9b22-4c76-b8c2-c8790c82b866)
+
+![obraz](https://github.com/user-attachments/assets/0c9db722-931f-49ed-90c8-cf76ba6582b2)
+![obraz](https://github.com/user-attachments/assets/ffc58a98-efe0-493f-a54b-6b0a33eeddca)
+![obraz](https://github.com/user-attachments/assets/8ce62c7f-3058-495b-89b6-0cffaf9a726a)
+![obraz](https://github.com/user-attachments/assets/114f5f3e-2a5f-48cc-8a81-eaf972cdc7e2)
+![obraz](https://github.com/user-attachments/assets/c153bb2c-cfbf-46f9-84bd-00cce40e93ef)
+![obraz](https://github.com/user-attachments/assets/e822ee59-d5a2-47c3-a304-f8957ed497e0)
+![obraz](https://github.com/user-attachments/assets/427df463-f218-4820-837c-38689a8b7320)
+
+
+
+
 
 ## Baza danych 
 ### ERD Diagram
@@ -103,3 +115,37 @@ Dokumentacji API dostępna jest pod:
 ## Zastosowane wzorce projektowe i poliformizm
 W projekcie zastosowano architektoniczny wzorzec **Service Layer**, który oddziela logikę biznesową od warstwy prezentacji (kontrolerów).
 Dodatkowo w kodzie występuje **polimorfizm interfejsowy** – obiekty są traktowane przez ich interfejs a nie implementację, co pozwala na łatwe podstawianie różnych wariantów logiki np. w testach lub rozszerzeniach.
+
+```
+[ Klient HTTP ]
+      |
+[ Kontroler (Controller) ]
+      |
+[ Wywołanie metody w Service Layer (np. OrderService.createOrder()) ]
+      |
+[ Service Layer ]
+      |
+[ Repozytorium (Repository/DAO) ]
+      |
+[ JPA / EntityManager 
+    – Generowanie SQL 
+    – Połączenie z Bazą Danych 
+]
+      |
+[ Baza Danych (np. PostgreSQL) ]
+      |
+[ Repozytorium zwraca encję/dane ]
+      |
+[ Service Layer ]
+      |
+[ Kontroler przygotowuje ResponseEntity (np. JSON) ]
+      |
+[ Klient HTTP otrzymuje odpowiedź (200/4xx/5xx) ]
+```
+
+![obraz](https://github.com/user-attachments/assets/bb6e8b91-12cd-4687-b200-e023dfef2b1f)
+![obraz](https://github.com/user-attachments/assets/f53364b0-a0ea-496b-ab20-f884216927bd)
+![obraz](https://github.com/user-attachments/assets/f75e385f-cadc-44e6-a786-c276fdce5b5b)
+
+
+
